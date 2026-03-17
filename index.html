@@ -4,9 +4,501 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Death by Chicken</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400&family=JetBrains+Mono:wght@300;400&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg:       #0e0d0b;
+      --bg-card:  #141310;
+      --text:     #ddd5c0;
+      --muted:    #7a7060;
+      --accent:   #c4a35a;
+      --border:   #2a2720;
+      --max:      740px;
+    }
+ 
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+ 
+    html { font-size: 17px; }
+ 
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'JetBrains Mono', monospace;
+      font-weight: 300;
+      line-height: 1.7;
+      padding: 0 1.5rem;
+    }
+ 
+    /* ── Layout ── */
+    .wrap {
+      max-width: var(--max);
+      margin: 0 auto;
+    }
+ 
+    /* ── Header ── */
+    header {
+      padding: 2.5rem 0 2rem;
+      border-bottom: 1px solid var(--border);
+      margin-bottom: 3.5rem;
+    }
+ 
+    .site-name {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.1rem;
+      font-weight: 400;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--muted);
+      text-decoration: none;
+    }
+ 
+    .site-name:hover { color: var(--text); }
+ 
+    nav {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+    }
+ 
+    nav ul {
+      list-style: none;
+      display: flex;
+      gap: 2rem;
+    }
+ 
+    nav a {
+      font-size: 0.75rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--muted);
+      text-decoration: none;
+      transition: color 0.15s;
+    }
+ 
+    nav a:hover, nav a.active { color: var(--accent); }
+ 
+    /* ── Game Hero ── */
+    .game-title {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(3.5rem, 10vw, 6rem);
+      font-weight: 600;
+      letter-spacing: 0.05em;
+      line-height: 1;
+      color: var(--text);
+      margin-bottom: 0.6rem;
+    }
+ 
+    .game-tagline {
+      font-size: 0.8rem;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin-bottom: 2rem;
+    }
+ 
+    .game-description {
+      font-size: 0.95rem;
+      color: #b0a898;
+      max-width: 600px;
+      margin-bottom: 2rem;
+    }
+ 
+    /* ── Store Links ── */
+    .store-links {
+      display: flex;
+      gap: 1rem;
+      margin-bottom: 3.5rem;
+      flex-wrap: wrap;
+    }
+ 
+    .btn {
+      display: inline-block;
+      padding: 0.55rem 1.4rem;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.72rem;
+      font-weight: 400;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      text-decoration: none;
+      border: 1px solid;
+      transition: background 0.15s, color 0.15s;
+    }
+ 
+    .btn-primary {
+      background: var(--accent);
+      color: var(--bg);
+      border-color: var(--accent);
+    }
+ 
+    .btn-primary:hover {
+      background: transparent;
+      color: var(--accent);
+    }
+ 
+    .btn-secondary {
+      background: transparent;
+      color: var(--text);
+      border-color: var(--border);
+    }
+ 
+    .btn-secondary:hover {
+      border-color: var(--accent);
+      color: var(--accent);
+    }
+ 
+    /* ── Trailer ── */
+    .section {
+      margin-bottom: 3.5rem;
+    }
+ 
+    .section-label {
+      font-size: 0.65rem;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin-bottom: 1rem;
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+    }
+ 
+    .section-label::after {
+      content: '';
+      flex: 1;
+      height: 1px;
+      background: var(--border);
+    }
+ 
+    .video-wrap {
+      position: relative;
+      width: 100%;
+      padding-bottom: 56.25%;
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+    }
+ 
+    .video-wrap iframe {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      border: none;
+    }
+ 
+    /* ── Screenshots ── */
+    .screenshots {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 0.75rem;
+    }
+ 
+    .screenshots .wide {
+      grid-column: span 2;
+    }
+ 
+    .screenshot-placeholder {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      aspect-ratio: 16 / 9;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--muted);
+      font-size: 0.65rem;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+    }
+ 
+    .screenshots img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+      border: 1px solid var(--border);
+      aspect-ratio: 16 / 9;
+    }
+ 
+    /* ── Features ── */
+    .features {
+      list-style: none;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 0.5rem 2rem;
+    }
+ 
+    .features li {
+      font-size: 0.85rem;
+      color: #b0a898;
+      padding-left: 1.2rem;
+      position: relative;
+    }
+ 
+    .features li::before {
+      content: '—';
+      position: absolute;
+      left: 0;
+      color: var(--accent);
+    }
+ 
+    /* ── About ── */
+    .about-text {
+      font-size: 0.9rem;
+      color: #b0a898;
+    }
+ 
+    .about-text p + p { margin-top: 1rem; }
+ 
+    /* ── Footer ── */
+    footer {
+      border-top: 1px solid var(--border);
+      margin-top: 5rem;
+      padding: 2rem 0;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 1rem;
+    }
+ 
+    footer p {
+      font-size: 0.7rem;
+      letter-spacing: 0.08em;
+      color: var(--muted);
+    }
+ 
+    footer a {
+      color: var(--muted);
+      text-decoration: none;
+    }
+ 
+    footer a:hover { color: var(--accent); }
+ 
+    /* ── Lightbox ── */
+    #lightbox {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.92);
+      z-index: 100;
+      align-items: center;
+      justify-content: center;
+    }
+ 
+    #lightbox.open { display: flex; }
+ 
+    #lightbox img {
+      max-width: 90vw;
+      max-height: 90vh;
+      object-fit: contain;
+      border: 1px solid var(--border);
+    }
+ 
+    .lb-btn {
+      position: fixed;
+      top: 50%;
+      transform: translateY(-50%);
+      background: none;
+      border: 1px solid var(--border);
+      color: var(--text);
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 1rem;
+      padding: 0.75rem 1rem;
+      cursor: pointer;
+      z-index: 101;
+    }
+ 
+    .lb-btn:hover { border-color: var(--accent); color: var(--accent); }
+    #lb-prev { left: 1.5rem; }
+    #lb-next { right: 1.5rem; }
+ 
+    #lb-close {
+      position: fixed;
+      top: 1.5rem;
+      right: 1.5rem;
+      background: none;
+      border: none;
+      color: var(--muted);
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.75rem;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      cursor: pointer;
+      z-index: 101;
+    }
+ 
+    #lb-close:hover { color: var(--accent); }
+ 
+    .screenshot-placeholder {
+      cursor: default !important;
+    }
+ 
+    .screenshots img { cursor: zoom-in; }
+ 
+    /* ── Responsive ── */
+    @media (max-width: 500px) {
+      .features { grid-template-columns: 1fr; }
+      .screenshots { grid-template-columns: 1fr; }
+      .screenshots .wide { grid-column: span 1; }
+    }
+  </style>
 </head>
 <body>
-  <h1>Death by Chicken</h1>
-  <p>Coming soon.</p>
+  <div class="wrap">
+ 
+    <header>
+      <nav>
+        <a class="site-name" href="/">Death by Chicken</a>
+        <ul>
+          <li><a href="/" class="active">Games</a></li>
+          <!-- <li><a href="/writing">Writing</a></li> -->
+        </ul>
+      </nav>
+    </header>
+ 
+    <main>
+ 
+      <!-- Hero -->
+      <section class="section">
+        <h1 class="game-title">DOMiNi</h1>
+        <p class="game-tagline">Roguelike &nbsp;·&nbsp; Puzzle &nbsp;·&nbsp; Dungeon Crawler</p>
+        <p class="game-description">
+          Combine strategic domino placement with a minimalist dungeon crawler.
+          Build paths, collect loot, and outmanoeuvre deadly monsters as the dungeon
+          grows increasingly unforgiving.
+        </p>
+        <div class="store-links">
+          <a class="btn btn-primary" href="https://store.steampowered.com/app/3401030/DOMiNi/" target="_blank" rel="noopener">Steam</a>
+          <a class="btn btn-secondary" href="https://deathbychicken.itch.io/domini" target="_blank" rel="noopener">itch.io</a>
+        </div>
+      </section>
+ 
+      <!-- Trailer -->
+      <section class="section">
+        <p class="section-label">Trailer</p>
+        <div class="video-wrap">
+          <iframe
+            src="https://www.youtube.com/embed/87kYvkpOJAk"
+            title="DOMiNi trailer"
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+            allowfullscreen>
+          </iframe>
+        </div>
+      </section>
+ 
+      <!-- Screenshots -->
+      <section class="section">
+        <p class="section-label">Screenshots</p>
+        <div class="screenshots">
+          <!--
+            Replace each .screenshot-placeholder div with an <img> tag once you have your images.
+            Put your image files in an /images/ folder in the repo, then use:
+            <img src="images/screenshot-1.png" alt="DOMiNi screenshot">
+ 
+            The first screenshot spans the full width (class="wide") — use your best one there.
+          -->
+          <div class="screenshot-placeholder wide">Screenshot 1</div>
+          <div class="screenshot-placeholder">Screenshot 2</div>
+          <div class="screenshot-placeholder">Screenshot 3</div>
+          <div class="screenshot-placeholder">Screenshot 4</div>
+          <div class="screenshot-placeholder">Screenshot 5</div>
+        </div>
+      </section>
+ 
+      <!-- Features -->
+      <section class="section">
+        <p class="section-label">Features</p>
+        <ul class="features">
+          <li>7 unlockable classes with unique rules and dominoes</li>
+          <li>21 procedurally generated levels</li>
+          <li>50+ tiles with unique effects</li>
+          <li>50+ shop items to improve your runs</li>
+          <li>Strategic gameplay where every move counts</li>
+          <li>Endless replayability</li>
+          <li>Permadeath</li>
+        </ul>
+      </section>
+ 
+      <!-- About -->
+      <section class="section">
+        <p class="section-label">About</p>
+        <div class="about-text">
+          <p>
+            Death by Chicken is a one-person indie studio. DOMiNi — the game and its
+            underlying engine — was designed and built entirely from scratch.
+          </p>
+        </div>
+      </section>
+ 
+    </main>
+ 
+    <footer>
+      <p>© 2025 Death by Chicken</p>
+      <p><a href="mailto:">contact</a></p>
+    </footer>
+ 
+  </div>
+ 
+  <!-- Lightbox -->
+  <div id="lightbox">
+    <button id="lb-close">close</button>
+    <button class="lb-btn" id="lb-prev">&#8592;</button>
+    <img id="lb-img" src="" alt="">
+    <button class="lb-btn" id="lb-next">&#8594;</button>
+  </div>
+ 
+  <script>
+    const lightbox = document.getElementById('lightbox');
+    const lbImg    = document.getElementById('lb-img');
+    let images = [], current = 0;
+ 
+    function getImages() {
+      return Array.from(document.querySelectorAll('.screenshots img'));
+    }
+ 
+    function open(index) {
+      images = getImages();
+      current = index;
+      lbImg.src = images[current].src;
+      lbImg.alt = images[current].alt;
+      lightbox.classList.add('open');
+    }
+ 
+    function close() {
+      lightbox.classList.remove('open');
+    }
+ 
+    function step(dir) {
+      current = (current + dir + images.length) % images.length;
+      lbImg.src = images[current].src;
+      lbImg.alt = images[current].alt;
+    }
+ 
+    // Attach click handlers to screenshots
+    document.querySelector('.screenshots').addEventListener('click', e => {
+      const img = e.target.closest('img');
+      if (!img) return;
+      open(getImages().indexOf(img));
+    });
+ 
+    document.getElementById('lb-prev').addEventListener('click', () => step(-1));
+    document.getElementById('lb-next').addEventListener('click', () => step(1));
+    document.getElementById('lb-close').addEventListener('click', close);
+ 
+    // Click backdrop to close
+    lightbox.addEventListener('click', e => {
+      if (e.target === lightbox) close();
+    });
+ 
+    // Keyboard navigation
+    document.addEventListener('keydown', e => {
+      if (!lightbox.classList.contains('open')) return;
+      if (e.key === 'Escape')      close();
+      if (e.key === 'ArrowLeft')   step(-1);
+      if (e.key === 'ArrowRight')  step(1);
+    });
+  </script>
+ 
 </body>
 </html>
